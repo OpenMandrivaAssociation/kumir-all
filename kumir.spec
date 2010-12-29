@@ -42,6 +42,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %package -n kumir
 Summary:	Kumir Language Implementation (development version)
+Group:	Education
 
 %description -n kumir
 Implementation of Kumir programming language, designed by academic Ershov.

@@ -1,44 +1,55 @@
 %define relno 1
-
-%define release unknown
-%define kum_release rc4
+%define kum_release 2396
+%define ver 1.7.3
 
 Name:		kumir-all
 Summary:	KUMIR education system
 License:	GPL
 Group:		Education
-Version:	1.7.1.%{kum_release}
+Version:	%{ver}.%{kum_release}
 Release:	%mkrel %{relno}
 BuildRoot:	%{_tmppath}/kumir-%{version}
 BuildRequires:	python >= 2.5
-BuildRequires:	libqt4-devel >= 4.5.0
-Requires:	libqtcore4 >= 4.5.0
-Requires:	libqtgui4 >= 4.5.0
-Requires:	libqtnetwork4 >= 4.5.0
-Requires:	libqtscript4 >= 4.5.0
-Requires:	libqtsvg4 >= 4.5.0
-Requires:	libqtxml4 >= 4.5.0
-Source:		kumir-1.7.1-%{kum_release}.tar.gz
-URL:		http://lpm.org.ru/kumir/
+BuildRequires:	libqt4-devel >= 4.6.0
+Requires:	libqtcore4 >= 4.6.0
+Requires:	libqtgui4 >= 4.6.0
+Requires:	libqtnetwork4 >= 4.6.0
+Requires:	libqtscript4 >= 4.6.0
+Requires:	libqtsvg4 >= 4.6.0
+Requires:	libqtxml4 >= 4.6.0
+Requires:	libqtwebkit4 >= 4.6.0
+Source:		http://lpm.org.ru/kumir2/files/%{ver}/kumir-%{ver}.%{kum_release}.tar.gz
+URL:		http://www.niisi.ru/kumir/
 
 %description
 Complete KUMIR education system
 
 %prep
-%setup -q -n kumir-1.7.1-%{kum_release}
-
+%setup -q -n kumir-%{ver}
 
 %build
-python ./configure --prefix=$RPM_BUILD_ROOT/usr
+python ./configure --prefix=/usr
 make
 strip -s kumir
 strip -s pluginstarter
+cd Kumir-EGE/src
+%qmake4 CONFIG+=release
+make
+cd ..
+strip -s bin/ckumir
+cd ..
 
 %install
+rm -rf %{buildroot}
 make install
+mkdir -p $RPM_BUILD_ROOT/usr/kumir/Addons/
+cp Addons/turtle.ini $RPM_BUILD_ROOT/usr/kumir/Addons/
+cp kumir-ege.desktop $RPM_BUILD_ROOT/usr/share/applications/
+mkdir -p $RPM_BUILD_ROOT/usr
+cp -R Kumir-EGE/bin Kumir-EGE/share $RPM_BUILD_ROOT/usr/ 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %package -n kumir
 Summary:	Kumir Language Implementation (development version)
@@ -60,14 +71,32 @@ update-mime-database /usr/share/mime > /dev/null
 
 %files -n kumir
 %defattr(-,root,root)
-/usr/libexec/kumir/Kumir/*
-/usr/libexec/kumir/kumir
-/usr/bin/kumir
-/usr/share/applications/kumir.desktop
-/usr/share/mime/application/x-kumir-program.xml
-/usr/share/mimelnk/application/x-kumir-program.desktop
-/usr/share/pixmaps/kumir.png
-/usr/share/pixmaps/x-kumir-program.png
+%defattr(-,root,root)
+/usr/kumir/Kumir/*
+/usr/kumir/kumir
+%{_bindir}/kumir
+%{_datadir}/applications/kumir.desktop
+%{_datadir}/applications/kumir-ege.desktop
+%{_datadir}/pixmaps/kumir.png
+
+%package -n ckumir
+Requires:	libqtcore4 >= 4.6.0
+Summary:	Console version of Kumir core 
+Group:		Education
+
+%description -n ckumir
+Non-gui version of Kumir core system.
+Operates in two modes:
+    1. Correctness check of program
+    2. Evaluation of program
+I/O operations are mapped to stdin/stdout, error messages - to stderr.
+Use of any modules (including non-GUI) is prohibited.
+For usage information type "ckumir --help" in terminal.
+
+%files -n ckumir
+%defattr(-,root,root)
+%{_bindir}/ckumir
+%{_datadir}/kumir/*
 
 %package -n kumir-pluginstarter
 Summary:	Starter to use Kumir Worlds without Kumir
@@ -76,11 +105,10 @@ Group:		Education
 %description -n kumir-pluginstarter
 Starter to use Kumir Worlds without Kumir
 
-
 %files -n kumir-pluginstarter
 %defattr(-,root,root)
-/usr/libexec/kumir/pluginstarter
-/usr/bin/kumpluginstarter
+/usr/kumir/pluginstarter
+%{_bindir}/kumpluginstarter
 
 %package -n kumir-worlds-turtle
 Summary:	Tutle for Kumir and Pictomir

@@ -1,5 +1,5 @@
 %define relno 1
-%define kum_release 2396
+%define kum_release 2369
 %define ver 1.7.3
 
 Name:		kumir-all

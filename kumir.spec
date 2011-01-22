@@ -33,7 +33,7 @@ make
 strip -s kumir
 strip -s pluginstarter
 cd Kumir-EGE/src
-%qmake4 CONFIG+=release
+%qmake_qt4 -config release
 make
 cd ..
 strip -s bin/ckumir

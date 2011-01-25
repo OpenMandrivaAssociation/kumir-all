@@ -19,6 +19,9 @@ Requires:	libqtsvg4 >= 4.6.0
 Requires:	libqtxml4 >= 4.6.0
 Requires:	libqtwebkit4 >= 4.6.0
 Source:		http://lpm.org.ru/kumir2/files/%{ver}/kumir-%{ver}.%{kum_release}.tar.gz
+Patch0:		kumir-ege-desktop.patch
+Patch1:		kumir-configure.patch
+#Patch2:		kumir-install-script.patch
 URL:		http://www.niisi.ru/kumir/
 
 %description
@@ -26,9 +29,12 @@ Complete KUMIR education system
 
 %prep
 %setup -q -n kumir-%{ver}
+%patch0 -p0
+%patch1 -p0
+#%patch2 -p0
 
 %build
-python ./configure --prefix=/usr
+python ./configure --prefix=%{buildroot}/usr
 make
 strip -s kumir
 strip -s pluginstarter
@@ -41,12 +47,11 @@ cd ..
 
 %install
 rm -rf %{buildroot}
-make install
-mkdir -p $RPM_BUILD_ROOT/usr/kumir/Addons/
-cp Addons/turtle.ini $RPM_BUILD_ROOT/usr/kumir/Addons/
-cp kumir-ege.desktop $RPM_BUILD_ROOT/usr/share/applications/
-mkdir -p $RPM_BUILD_ROOT/usr
-cp -R Kumir-EGE/bin Kumir-EGE/share $RPM_BUILD_ROOT/usr/ 
+KUMIR_DIR=%{buildroot}%{_datadir}/kumir make install
+mkdir -p %{buildroot}%{_datadir}/kumir/Addons/
+cp Addons/turtle.ini %{buildroot}%{_datadir}/kumir/Addons/
+cp kumir-ege.desktop %{buildroot}%{_datadir}/applications/
+cp -R Kumir-EGE/bin Kumir-EGE/share %{buildroot}/usr
 
 %clean
 rm -rf %{buildroot}
@@ -72,8 +77,8 @@ update-mime-database /usr/share/mime > /dev/null
 %files -n kumir
 %defattr(-,root,root)
 %defattr(-,root,root)
-/usr/kumir/Kumir/*
-/usr/kumir/kumir
+%{_datadir}/kumir/Kumir/*
+%{_datadir}/kumir/kumir
 %{_bindir}/kumir
 %{_datadir}/applications/kumir.desktop
 %{_datadir}/applications/kumir-ege.desktop
@@ -107,7 +112,7 @@ Starter to use Kumir Worlds without Kumir
 
 %files -n kumir-pluginstarter
 %defattr(-,root,root)
-/usr/kumir/pluginstarter
+%{_datadir}/kumir/pluginstarter
 %{_bindir}/kumpluginstarter
 
 %package -n kumir-worlds-turtle
@@ -120,7 +125,7 @@ Turtle for Kumir anf Pictomir
 
 %files -n kumir-worlds-turtle
 %defattr(-,root,root)
-/usr/libexec/kumir/Addons/libturtle.so
+%{_datadir}/kumir/Addons/libturtle.so
 
 %package -n kumir-worlds-kuznechik
 Summary:	Grasshopper for Kumir and Pictomir
@@ -132,7 +137,7 @@ Grasshopper for Kumir and Pictomir
 
 %files -n kumir-worlds-kuznechik
 %defattr(-,root,root)
-/usr/libexec/kumir/Addons/libkuznechik.so
+%{_datadir}/kumir/Addons/libkuznechik.so
 
 %package -n kumir-worlds-vodoley
 Summary:	Aquarius for Kumir and Pictomir
@@ -144,5 +149,5 @@ Aquarius for Kumir anf Pictomir
 
 %files -n kumir-worlds-vodoley
 %defattr(-,root,root)
-/usr/libexec/kumir/Addons/libvodoley.so
-/usr/libexec/kumir/Addons/vodoley/*
+%{_datadir}/kumir/Addons/libvodoley.so
+%{_datadir}/kumir/Addons/vodoley/*

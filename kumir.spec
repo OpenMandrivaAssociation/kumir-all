@@ -9,7 +9,7 @@ Group:		Education
 Version:	%{ver}.%{kum_release}
 Release:	%mkrel %{relno}
 BuildRoot:	%{_tmppath}/kumir-%{version}
-BuildRequires:	python >= 2.5
+BuildRequires:	python
 BuildRequires:	libqt4-devel >= 4.6.0
 Requires:	libqtcore4 >= 4.6.0
 Requires:	libqtgui4 >= 4.6.0

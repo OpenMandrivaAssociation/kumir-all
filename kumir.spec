@@ -49,13 +49,13 @@ strip -s pluginstarter
 rm -rf %{buildroot}
 KUMIR_DIR=%{buildroot}%{_datadir}/kumir make install
 mkdir -p %{buildroot}%{_datadir}/kumir/Addons/
-mkdir -p $RPM_BUILD_ROOT/usr/kumir/Addons/vodoley/resources/
-mkdir -p $RPM_BUILD_ROOT/usr/kumir/Addons/painter/resources/
+mkdir -p %{buildroot}%{_datadir}/kumir/Addons/vodoley/resources/
+mkdir -p %{buildroot}%{_datadir}/kumir/Addons/painter/resources/
 
-cp Addons/libpainter.so $RPM_BUILD_ROOT/usr/kumir/Addons/
-cp Addons/turtle.ini $RPM_BUILD_ROOT/usr/kumir/Addons/
-cp Addons/vodoley/resources/*.* $RPM_BUILD_ROOT/usr/kumir/Addons/vodoley/resources/
-cp Addons/painter/resources/*.* $RPM_BUILD_ROOT/usr/kumir/Addons/painter/resources/
+cp Addons/libpainter.so %{buildroot}%{_datadir}/kumir/Addons/
+cp Addons/turtle.ini %{buildroot}%{_datadir}/kumir/Addons/
+cp Addons/vodoley/resources/*.* %{buildroot}%{_datadir}/kumir/Addons/vodoley/resources/
+cp Addons/painter/resources/*.* %{buildroot}%{_datadir}/kumir/Addons/painter/resources/
 cp kumir-ege.desktop $RPM_BUILD_ROOT/usr/share/applications/
 #cp -R Kumir-EGE/bin Kumir-EGE/share %{buildroot}/usr
 

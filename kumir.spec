@@ -1,6 +1,6 @@
 %define relno 1
-%define kum_release 2369
-%define ver 1.7.3
+%define kum_release 2565
+%define ver 1.8.0
 
 Name:		kumir-all
 Summary:	KUMIR education system
@@ -38,20 +38,26 @@ python ./configure --prefix=%{buildroot}/usr
 make
 strip -s kumir
 strip -s pluginstarter
-cd Kumir-EGE/src
-%qmake_qt4 -config release
-make
-cd ..
-strip -s bin/ckumir
-cd ..
+#cd Kumir-EGE/src
+#%qmake_qt4 -config release
+#make
+#cd ..
+#strip -s bin/ckumir
+#cd ..
 
 %install
 rm -rf %{buildroot}
 KUMIR_DIR=%{buildroot}%{_datadir}/kumir make install
 mkdir -p %{buildroot}%{_datadir}/kumir/Addons/
-cp Addons/turtle.ini %{buildroot}%{_datadir}/kumir/Addons/
-cp kumir-ege.desktop %{buildroot}%{_datadir}/applications/
-cp -R Kumir-EGE/bin Kumir-EGE/share %{buildroot}/usr
+mkdir -p $RPM_BUILD_ROOT/usr/kumir/Addons/vodoley/resources/
+mkdir -p $RPM_BUILD_ROOT/usr/kumir/Addons/painter/resources/
+
+cp Addons/libpainter.so $RPM_BUILD_ROOT/usr/kumir/Addons/
+cp Addons/turtle.ini $RPM_BUILD_ROOT/usr/kumir/Addons/
+cp Addons/vodoley/resources/*.* $RPM_BUILD_ROOT/usr/kumir/Addons/vodoley/resources/
+cp Addons/painter/resources/*.* $RPM_BUILD_ROOT/usr/kumir/Addons/painter/resources/
+cp kumir-ege.desktop $RPM_BUILD_ROOT/usr/share/applications/
+#cp -R Kumir-EGE/bin Kumir-EGE/share %{buildroot}/usr
 
 %clean
 rm -rf %{buildroot}
@@ -84,24 +90,24 @@ update-mime-database /usr/share/mime > /dev/null
 %{_datadir}/applications/kumir-ege.desktop
 %{_datadir}/pixmaps/kumir.png
 
-%package -n ckumir
-Requires:	libqtcore4 >= 4.6.0
-Summary:	Console version of Kumir core 
-Group:		Education
+#%package -n ckumir
+#Requires:	libqtcore4 >= 4.6.0
+#Summary:	Console version of Kumir core 
+#Group:		Education
 
-%description -n ckumir
-Non-gui version of Kumir core system.
-Operates in two modes:
-    1. Correctness check of program
-    2. Evaluation of program
-I/O operations are mapped to stdin/stdout, error messages - to stderr.
-Use of any modules (including non-GUI) is prohibited.
-For usage information type "ckumir --help" in terminal.
+#%description -n ckumir
+#Non-gui version of Kumir core system.
+#Operates in two modes:
+#    1. Correctness check of program
+#    2. Evaluation of program
+#I/O operations are mapped to stdin/stdout, error messages - to stderr.
+#Use of any modules (including non-GUI) is prohibited.
+#For usage information type "ckumir --help" in terminal.
 
-%files -n ckumir
-%defattr(-,root,root)
-%{_bindir}/ckumir
-%{_datadir}/kumir/*
+#%files -n ckumir
+#%defattr(-,root,root)
+#%{_bindir}/ckumir
+#%{_datadir}/kumir/*
 
 %package -n kumir-pluginstarter
 Summary:	Starter to use Kumir Worlds without Kumir
@@ -151,3 +157,16 @@ Aquarius for Kumir anf Pictomir
 %defattr(-,root,root)
 %{_datadir}/kumir/Addons/libvodoley.so
 %{_datadir}/kumir/Addons/vodoley/*
+
+%package -n kumir-worlds-painter
+Summary:	Painter for Kumir
+Requires:	kumir-pluginstarter >= %{version}
+Group:		Education
+
+%description -n kumir-worlds-painter
+Painter for Kumir
+
+%files -n kumir-worlds-painter
+%defattr(-,root,root)
+/usr/kumir/Addons/libpainter.so
+/usr/kumir/Addons/painter/*

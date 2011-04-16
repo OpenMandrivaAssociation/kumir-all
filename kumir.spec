@@ -168,5 +168,5 @@ Painter for Kumir
 
 %files -n kumir-worlds-painter
 %defattr(-,root,root)
-/usr/kumir/Addons/libpainter.so
-/usr/kumir/Addons/painter/*
+%{_datadir}/kumir/Addons/libpainter.so
+%{_datadir}/kumir/Addons/painter/*

@@ -1,4 +1,4 @@
-%define relno 1
+%define relno 2
 %define kum_release 2565
 %define ver 1.8.0
 
@@ -65,6 +65,7 @@ rm -rf %{buildroot}
 %package -n kumir
 Summary:	Kumir Language Implementation (development version)
 Group:	Education
+Suggests:	kumir-pluginstarter kumir-worlds-kuznechik kumir-worlds-painter kumir-worlds-turtle kumir-worlds-vodoley
 
 %description -n kumir
 Implementation of Kumir programming language, designed by academic Ershov.

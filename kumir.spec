@@ -132,6 +132,7 @@ Turtle for Kumir anf Pictomir
 %files -n kumir-worlds-turtle
 %defattr(-,root,root)
 %{_datadir}/kumir/Addons/libturtle.so
+%{_datadir}/kumir/Addons/turtle.ini
 
 %package -n kumir-worlds-kuznechik
 Summary:	Grasshopper for Kumir and Pictomir

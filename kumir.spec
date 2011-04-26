@@ -1,4 +1,4 @@
-%define relno 2
+%define relno 3
 %define kum_release 2565
 %define ver 1.8.0
 
@@ -19,25 +19,44 @@ Requires:	libqtsvg4 >= 4.6.0
 Requires:	libqtxml4 >= 4.6.0
 Requires:	libqtwebkit4 >= 4.6.0
 Source:		http://lpm.org.ru/kumir2/files/%{ver}/kumir-%{ver}.%{kum_release}.tar.gz
+Source1:	kumir-alt-icons.tar.bz2
+Source2:	test.vod
+#patch from SUSE
 Patch0:		kumir-ege-desktop.patch
 Patch1:		kumir-configure.patch
-#Patch2:		kumir-install-script.patch
+#patch from ALT
+Patch2: kumir-1.7.1-desktop.patch
+Patch3: kumir-1.7.90-x-kumir-program.desktop.patch
+Patch4: kumir-1.7.1-x-kumir-program.xml.patch
+#Patch5: kumir-1.7.90-opt.patch
 URL:		http://www.niisi.ru/kumir/
 
 %description
 Complete KUMIR education system
 
 %prep
-%setup -q -n kumir-%{ver}
+%setup -q -n kumir-%{ver} -a 1
+#aplly patch from SUSE
 %patch0 -p0
 %patch1 -p0
-#%patch2 -p0
+#apply patch from ALT
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+#%patch5 -p1
+cp %SOURCE2 .
+
+# Disable build of some plugins
+sed -i "s/dwunog//" Addons/Addons.pro
+sed -i "s/isometricRobot//" Addons/Addons.pro
+sed -i "s/convertor//" Addons/Addons.pro
+sed -i "s/Robotor3D//" Addons/Addons.pro
 
 %build
 python ./configure --prefix=%{buildroot}/usr
 make
-strip -s kumir
-strip -s pluginstarter
+#strip -s kumir
+#strip -s pluginstarter
 #cd Kumir-EGE/src
 #%qmake_qt4 -config release
 #make
@@ -58,6 +77,52 @@ cp Addons/vodoley/resources/*.* %{buildroot}%{_datadir}/kumir/Addons/vodoley/res
 cp Addons/painter/resources/*.* %{buildroot}%{_datadir}/kumir/Addons/painter/resources/
 cp kumir-ege.desktop $RPM_BUILD_ROOT/usr/share/applications/
 #cp -R Kumir-EGE/bin Kumir-EGE/share %{buildroot}/usr
+
+#install -m 644 -D Kumir/X-Desktop/%name.desktop %buildroot%_desktopdir/%name.desktop
+install -m 644 -D Kumir/X-Desktop/x-kumir-program.xml %buildroot/%_datadir/mime/packages/x-kumir-program.xml
+install -m 644 -D Kumir/X-Desktop/x-kumir-program.desktop  %buildroot/%_datadir/mimelnk/application/x-kumir-program.desktop
+
+# Install icons
+
+mkdir -p %buildroot%_icons16dir/ %buildroot%{_iconsbasedir}/32x32/apps %buildroot%_liconsdir/ %buildroot%_iconsdir/hicolor/64x64/apps/ %buildroot%_iconsdir/hicolor/128x128/apps/
+install -m 644 alt-icons/16x16/*.png %buildroot%_icons16dir/
+install -m 644 alt-icons/32x32/*.png %buildroot%{_iconsbasedir}/32x32/apps
+install -m 644 alt-icons/48x48/*.png %buildroot%_liconsdir/
+install -m 644 alt-icons/64x64/*.png %buildroot%_iconsdir/hicolor/64x64/apps/
+#install -m 644 alt-icons/128x128/*.png %buildroot%_iconsdir/hicolor/128x128/apps/
+
+#rm %buildroot%_iconsdir/hicolor/128x128/apps/kumir.png
+#rm %buildroot%_iconsdir/hicolor/*/apps/pictomir.png
+
+install -m 644 -D Kumir/Images/mime/crystalsvg/mimetypes/16x16/application-x-kumir-program.png %buildroot%_iconsdir/crystalsvg/16x16/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/crystalsvg/mimetypes/22x22/application-x-kumir-program.png %buildroot%_iconsdir/crystalsvg/22x22/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/crystalsvg/mimetypes/32x32/application-x-kumir-program.png %buildroot%_iconsdir/crystalsvg/32x32/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/crystalsvg/mimetypes/48x48/application-x-kumir-program.png %buildroot%_iconsdir/crystalsvg/48x48/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/crystalsvg/mimetypes/64x64/application-x-kumir-program.png %buildroot%_iconsdir/crystalsvg/64x64/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/crystalsvg/mimetypes/scalable/application-x-kumir-program.svg %buildroot%_iconsdir/crystalsvg/scalable/mimetypes/application-x-kumir-program.svg
+install -m 644 -D Kumir/Images/mime/oxygen/mimetypes/16x16/application-x-kumir-program.png %buildroot%_iconsdir/oxygen/16x16/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/oxygen/mimetypes/22x22/application-x-kumir-program.png %buildroot%_iconsdir/oxygen/22x22/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/oxygen/mimetypes/32x32/application-x-kumir-program.png %buildroot%_iconsdir/oxygen/32x32/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/oxygen/mimetypes/48x48/application-x-kumir-program.png %buildroot%_iconsdir/oxygen/48x48/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/oxygen/mimetypes/64x64/application-x-kumir-program.png %buildroot%_iconsdir/oxygen/64x64/mimetypes/application-x-kumir-program.png
+install -m 644 -D Kumir/Images/mime/oxygen/mimetypes/scalable/application-x-kumir-program.svg %buildroot%_iconsdir/oxygen/scalable/mimetypes/application-x-kumir-program.svg
+
+# Install TaskControl plugin
+install -m 644 -D TaskControl/libtaskControl.so  %{buildroot}%{_datadir}/kumir/TaskControl/libtaskControl.so
+
+# Fix paths to help files
+cd %{buildroot}%{_datadir}/kumir/Kumir
+ln -s Help help
+
+# Rename kumir.png to correct name
+cd %buildroot/%_datadir/pixmaps
+mv kumir.png application-x-kumir-program.png
+
+# make link in /usr/bin/kumir
+#cd %buildroot%_bindir
+#rm kumir kumpluginstarter
+#ln -s ../..%_libdir/kumir/kumir kumir
+#ln -s ../..%_libdir/kumir/pluginstarter kumpluginstarter
 
 %clean
 rm -rf %{buildroot}
@@ -89,7 +154,11 @@ update-mime-database /usr/share/mime > /dev/null
 %{_bindir}/kumir
 %{_datadir}/applications/kumir.desktop
 %{_datadir}/applications/kumir-ege.desktop
-%{_datadir}/pixmaps/kumir.png
+%{_datadir}/pixmaps/*
+%_datadir/mime/packages/x-kumir-program.xml
+%_datadir/mimelnk/application/x-kumir-program.desktop
+%{_datadir}/kumir/TaskControl
+%{_iconsdir}/*
 
 #%package -n ckumir
 #Requires:	libqtcore4 >= 4.6.0

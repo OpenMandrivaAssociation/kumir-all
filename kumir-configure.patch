@@ -1,0 +1,11 @@
+--- configure.py.old	2011-01-24 00:37:13.369452002 +0300
++++ configure.py	2011-01-24 00:37:30.159452002 +0300
+@@ -51,7 +51,7 @@
+         QMAKE_ARGUMENTS += ["-spec",arg[7:]]
+ 
+ if DIR is None:
+-    DIR = PREFIX + "/kumir"
++    DIR = PREFIX + "/share/kumir"
+ 
+ QMAKE_ARGUMENTS += ["PREFIX="+PREFIX, "KUMIR_DIR="+DIR]
+ 

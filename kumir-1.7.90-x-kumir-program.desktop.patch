@@ -1,0 +1,11 @@
+--- kumir/Kumir/X-Desktop//x-kumir-program.desktop.orig	2010-02-26 19:59:59.000000000 +0300
++++ kumir/Kumir/X-Desktop//x-kumir-program.desktop	2010-09-13 01:33:32.000000000 +0400
+@@ -1,7 +1,7 @@
+ [Desktop Entry]
+-Encoding=UTF-8
+ Comment=Kumir Program
+ Comment[ru]=Программа Кумир
+ Icon=application-x-kumir-program
+ Type=MimeType
++MimeType=application/x-kumir-program
+ Patterns=*.kum;*.Kum;*.KUM

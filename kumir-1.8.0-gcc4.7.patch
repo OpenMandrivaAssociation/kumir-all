@@ -1,0 +1,12 @@
+diff -urN kumir-1.8.0/Kumir/Sources/pushdownautomata.cpp kumir-1.8.0-patched/Kumir/Sources/pushdownautomata.cpp
+--- kumir-1.8.0/Kumir/Sources/pushdownautomata.cpp	2011-04-05 09:11:42.000000000 +0000
++++ kumir-1.8.0-patched/Kumir/Sources/pushdownautomata.cpp	2012-10-17 00:05:51.761325109 +0000
+@@ -20,6 +20,8 @@
+ #include <QtCore>
+ #include "error.h"
+ 
++#include <unistd.h>
++
+ #define CRITICAL_PERFORMANCE_PROGRAM_SIZE 20
+ #define ALLOW_QDEBUG false
+ #define ALLOW_PDWINDOW false

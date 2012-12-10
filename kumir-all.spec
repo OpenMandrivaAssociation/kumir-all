@@ -1,4 +1,3 @@
-%define relno 3
 %define kum_release 2565
 %define ver 1.8.0
 
@@ -7,32 +6,34 @@ Summary:	KUMIR education system
 License:	GPL
 Group:		Education
 Version:	%{ver}.%{kum_release}
-Release:	%mkrel %{relno}
-BuildRoot:	%{_tmppath}/kumir-%{version}
-BuildRequires:	python >= 2.5
-BuildRequires:	libqt4-devel >= 4.6.0
-Requires:	libqtcore4 >= 4.6.0
-Requires:	libqtgui4 >= 4.6.0
-Requires:	libqtnetwork4 >= 4.6.0
-Requires:	libqtscript4 >= 4.6.0
-Requires:	libqtsvg4 >= 4.6.0
-Requires:	libqtxml4 >= 4.6.0
-Requires:	libqtwebkit4 >= 4.6.0
+Release:	4
+URL:		http://www.niisi.ru/kumir/
 Source:		http://lpm.org.ru/kumir2/files/%{ver}/kumir-%{ver}.%{kum_release}.tar.gz
 Source1:	kumir-alt-icons.tar.bz2
 Source2:	test.vod
+Source10:	%{name}.rpmlintrc
 #patch from SUSE
 Patch0:		kumir-ege-desktop.patch
 Patch1:		kumir-configure.patch
 #patch from ALT
-Patch2: kumir-1.7.1-desktop.patch
-Patch3: kumir-1.7.90-x-kumir-program.desktop.patch
-Patch4: kumir-1.7.1-x-kumir-program.xml.patch
-#Patch5: kumir-1.7.90-opt.patch
-URL:		http://www.niisi.ru/kumir/
+Patch2:		kumir-1.7.1-desktop.patch
+Patch3:		kumir-1.7.90-x-kumir-program.desktop.patch
+Patch4:		kumir-1.7.1-x-kumir-program.xml.patch
+# Rosa patches
+Patch10:	kumir-1.8.0-gcc4.7.patch
+
+BuildRequires:	python
+BuildRequires:	qt4-devel
+Requires:	libqtcore4
+Requires:	libqtgui4
+Requires:	libqtnetwork4
+Requires:	libqtscript4
+Requires:	libqtsvg4
+Requires:	libqtxml4
+Requires:	libqtwebkit4
 
 %description
-Complete KUMIR education system
+Complete KUMIR education system.
 
 %prep
 %setup -q -n kumir-%{ver} -a 1
@@ -43,8 +44,8 @@ Complete KUMIR education system
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-#%patch5 -p1
-cp %SOURCE2 .
+%patch10 -p1
+cp %{SOURCE2} .
 
 # Disable build of some plugins
 sed -i "s/dwunog//" Addons/Addons.pro
@@ -65,7 +66,6 @@ make
 #cd ..
 
 %install
-rm -rf %{buildroot}
 KUMIR_DIR=%{buildroot}%{_datadir}/kumir make install
 mkdir -p %{buildroot}%{_datadir}/kumir/Addons/
 mkdir -p %{buildroot}%{_datadir}/kumir/Addons/vodoley/resources/
@@ -75,7 +75,7 @@ cp Addons/libpainter.so %{buildroot}%{_datadir}/kumir/Addons/
 cp Addons/turtle.ini %{buildroot}%{_datadir}/kumir/Addons/
 cp Addons/vodoley/resources/*.* %{buildroot}%{_datadir}/kumir/Addons/vodoley/resources/
 cp Addons/painter/resources/*.* %{buildroot}%{_datadir}/kumir/Addons/painter/resources/
-cp kumir-ege.desktop $RPM_BUILD_ROOT/usr/share/applications/
+cp kumir-ege.desktop %{buildroot}%{_datadir}/applications/
 #cp -R Kumir-EGE/bin Kumir-EGE/share %{buildroot}/usr
 
 #install -m 644 -D Kumir/X-Desktop/%name.desktop %buildroot%_desktopdir/%name.desktop
@@ -115,7 +115,7 @@ cd %{buildroot}%{_datadir}/kumir/Kumir
 ln -s Help help
 
 # Rename kumir.png to correct name
-cd %buildroot/%_datadir/pixmaps
+cd %{buildroot}%{_datadir}/pixmaps
 mv kumir.png application-x-kumir-program.png
 
 # make link in /usr/bin/kumir
@@ -124,8 +124,9 @@ mv kumir.png application-x-kumir-program.png
 #ln -s ../..%_libdir/kumir/kumir kumir
 #ln -s ../..%_libdir/kumir/pluginstarter kumpluginstarter
 
-%clean
-rm -rf %{buildroot}
+# Fix permissions
+find %{buildroot} -perm 0666 -exec chmod 0644 '{}' \;
+find %{buildroot} -perm 0777 -exec chmod 0755 '{}' \;
 
 %package -n kumir
 Summary:	Kumir Language Implementation (development version)
@@ -147,16 +148,14 @@ rm -f XMLnamespaces aliases globs magic subclasses application/x-kumir-program.x
 update-mime-database /usr/share/mime > /dev/null
 
 %files -n kumir
-%defattr(-,root,root)
-%defattr(-,root,root)
 %{_datadir}/kumir/Kumir/*
 %{_datadir}/kumir/kumir
 %{_bindir}/kumir
 %{_datadir}/applications/kumir.desktop
 %{_datadir}/applications/kumir-ege.desktop
 %{_datadir}/pixmaps/*
-%_datadir/mime/packages/x-kumir-program.xml
-%_datadir/mimelnk/application/x-kumir-program.desktop
+%{_datadir}/mime/packages/x-kumir-program.xml
+%{_datadir}/mimelnk/application/x-kumir-program.desktop
 %{_datadir}/kumir/TaskControl
 %{_iconsdir}/*
 
@@ -187,7 +186,6 @@ Group:		Education
 Starter to use Kumir Worlds without Kumir
 
 %files -n kumir-pluginstarter
-%defattr(-,root,root)
 %{_datadir}/kumir/pluginstarter
 %{_bindir}/kumpluginstarter
 
@@ -200,7 +198,6 @@ Group:		Education
 Turtle for Kumir anf Pictomir
 
 %files -n kumir-worlds-turtle
-%defattr(-,root,root)
 %{_datadir}/kumir/Addons/libturtle.so
 %{_datadir}/kumir/Addons/turtle.ini
 
@@ -213,7 +210,6 @@ Group:		Education
 Grasshopper for Kumir and Pictomir
 
 %files -n kumir-worlds-kuznechik
-%defattr(-,root,root)
 %{_datadir}/kumir/Addons/libkuznechik.so
 
 %package -n kumir-worlds-vodoley
@@ -225,7 +221,6 @@ Group:		Education
 Aquarius for Kumir anf Pictomir
 
 %files -n kumir-worlds-vodoley
-%defattr(-,root,root)
 %{_datadir}/kumir/Addons/libvodoley.so
 %{_datadir}/kumir/Addons/vodoley/*
 
@@ -238,6 +233,29 @@ Group:		Education
 Painter for Kumir
 
 %files -n kumir-worlds-painter
-%defattr(-,root,root)
 %{_datadir}/kumir/Addons/libpainter.so
 %{_datadir}/kumir/Addons/painter/*
+
+
+%changelog
+* Tue Apr 26 2011 Александр Казанцев <kazancas@mandriva.org> 1.8.0.2565-3mdv2011.0
++ Revision: 659414
++ rebuild (emptylog)
+
+* Sun Apr 17 2011 Александр Казанцев <kazancas@mandriva.org> 1.8.0.2565-2
++ Revision: 653967
++ rebuild (emptylog)
+
+* Sun Apr 17 2011 Александр Казанцев <kazancas@mandriva.org> 1.8.0.2565-1
++ Revision: 653918
+- new version 1.8.0. Add new addons - painter
+
+* Tue Jan 25 2011 Александр Казанцев <kazancas@mandriva.org> 1.7.3.2369-1
++ Revision: 632495
+- version 1.7.3
+
+* Wed Dec 29 2010 Александр Казанцев <kazancas@mandriva.org> 1.7.1.rc4-1mdv2011.0
++ Revision: 625872
+- import kumir-all
+
+

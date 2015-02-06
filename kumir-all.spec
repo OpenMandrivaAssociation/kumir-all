@@ -6,7 +6,7 @@ Summary:	KUMIR education system
 License:	GPL
 Group:		Education
 Version:	%{ver}.%{kum_release}
-Release:	4
+Release:	5
 URL:		http://www.niisi.ru/kumir/
 Source:		http://lpm.org.ru/kumir2/files/%{ver}/kumir-%{ver}.%{kum_release}.tar.gz
 Source1:	kumir-alt-icons.tar.bz2

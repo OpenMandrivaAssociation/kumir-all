@@ -7,7 +7,7 @@ License:	GPL
 Group:		Education
 Version:	%{ver}.%{kum_release}
 Release:	5
-URL:		http://www.niisi.ru/kumir/
+URL:		https://www.niisi.ru/kumir/
 Source:		http://lpm.org.ru/kumir2/files/%{ver}/kumir-%{ver}.%{kum_release}.tar.gz
 Source1:	kumir-alt-icons.tar.bz2
 Source2:	test.vod

@@ -22,6 +22,7 @@ Patch4:		kumir-1.7.1-x-kumir-program.xml.patch
 # Rosa patches
 Patch10:	kumir-1.8.0-gcc4.7.patch
 
+BuildRequires:	make
 BuildRequires:	python
 BuildRequires:	qt4-devel
 Requires:	libqtcore4
